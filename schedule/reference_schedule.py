@@ -10,6 +10,7 @@ from reference import top10_holders
 from reference import top10_floatholders
 from util import date_util
 
+
 def fetch_and_save_all_stocks():
     """
     获取所有符合条件的 ts_code，并对每个 ts_code 调用 fetch_and_save_stock_data
@@ -33,7 +34,8 @@ def fetch_and_save_all_stocks():
 
     print("执行结束")
 
+
 scheduler = BlockingScheduler()
-scheduler.add_job(fetch_and_save_all_stocks, 'cron', hour=15, minute=37)
+scheduler.add_job(fetch_and_save_all_stocks, 'cron', 15, 37)
 # 开始定时任务
 scheduler.start()

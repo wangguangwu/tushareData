@@ -9,6 +9,7 @@ import pymysql
 
 from config.config import pro, db_config
 
+
 def fetch_top10_holders(ts_code, start_date, end_date):
     """
     从 Tushare 获取前十大股东数据并返回 DataFrame
@@ -36,6 +37,7 @@ def fetch_top10_holders(ts_code, start_date, end_date):
     print("数据获取成功")
     print(df)
     return df
+
 
 def save_top10_holders_to_db(df):
     """
@@ -100,6 +102,36 @@ def save_top10_holders_to_db(df):
     finally:
         connection.close()
 
+
+def list_latest_top10_holders(ts_code):
+    # 建立数据库连接
+    connection = pymysql.connect(**db_config)
+    try:
+        with connection.cursor() as cursor:
+            # SQL 查询语句
+            sql = """
+            SELECT th.ts_code, th.ann_date, th.end_date, th.holder_name, th.hold_amount,
+                   th.hold_ratio, th.hold_float_ratio, th.hold_change, th.holder_type
+            FROM top10_holders AS th
+            JOIN (
+                SELECT ts_code, MAX(ann_date) AS latest_ann_date
+                FROM top10_holders
+                GROUP BY ts_code
+            ) AS latest ON th.ts_code = latest.ts_code 
+            AND th.ann_date = latest.latest_ann_date
+            WHERE th.ts_code = %s;
+            """
+
+            # 执行查询
+            cursor.execute(sql, (ts_code,))
+            # 获取查询结果
+            results = cursor.fetchall()
+            # 返回查询结果
+            return results
+    finally:
+        connection.close()
+
+
 def fetch_and_save_top10_holders(ts_code, start_date, end_date):
     """
     根据 ts_code 获取并保存前十大股东数据
@@ -112,7 +144,9 @@ def fetch_and_save_top10_holders(ts_code, start_date, end_date):
 
     print(f"{ts_code} 的前十大股东数据已成功获取并保存")
 
+
 # 使用示例
 if __name__ == "__main__":
-    fetch_and_save_top10_holders("600221.SH", "20230101", "")  # 调用方法，传入 ts_code
-
+    # fetch_and_save_top10_holders("600221.SH", "20230101", "")  # 调用方法，传入 ts_code
+    df = list_latest_top10_holders("600221.SH")
+    print(df)

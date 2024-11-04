@@ -2,7 +2,6 @@
 # -*- coding: UTF-8 -*-
 
 # author: wangguangwu
-# 定时任务设置，每天上午10点执行一次
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 from market import daily_basic
