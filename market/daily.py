@@ -4,7 +4,7 @@
 # author: wangguangwu
 import pymysql
 
-from config import pro, db_config
+from config.config import pro, db_config
 
 
 def fetch_stock_data(ts_code, start_date, end_date):

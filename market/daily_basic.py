@@ -6,7 +6,7 @@
 import numpy as np
 import pymysql
 
-from config import pro, db_config
+from config.config import pro, db_config
 
 
 def fetch_daily_basic(ts_code, start_date, end_date):

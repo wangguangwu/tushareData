@@ -6,7 +6,9 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 from market import daily_basic
-import stock_basic
+from market import daily
+from basic import stock_basic
+from util import date_util
 
 
 def fetch_and_save_reference():
@@ -21,22 +23,15 @@ def fetch_and_save_reference():
         print("没有符合条件的股票代码。")
         return
 
-    # 遍历每个 ts_code，将其传递给 daily_info 中的 fetch_and_save_stock_data 方法
-    # for ts_code in ts_code_list:
-    #     try:
-    #         print(f"Processing {ts_code}...")
-    #         daily_info.fetch_and_save_stock_data(ts_code, "", "")
-    #     except Exception as e:
-    #         print(f"处理 {ts_code} 时出错: {e}")
-
     for ts_code in ts_code_list:
         try:
             print(f"Processing {ts_code}...")
-            daily_basic.fetch_and_save_daily_basic(ts_code, "20230101", "")
+            daily_basic.fetch_and_save_daily_basic(ts_code, date_util.get_fixed_time(), "")
+            daily.fetch_and_save_stock_data(ts_code, date_util.get_fixed_time(), "")
         except Exception as e:
             print(f"处理 {ts_code} 时出错: {e}")
 
-    print("执行结束")
+    print("market 定时任务执行结束")
 
 
 scheduler = BlockingScheduler()

@@ -5,9 +5,8 @@
 
 
 # 导入tushare
-import tushare as ts
 import pymysql
-from config import pro, db_config
+from config.config import pro, db_config
 
 def fetch_stock_basic_data():
     """
@@ -97,6 +96,7 @@ def fetch_on_stock_ts_code():
             return [row[0] for row in results]
     finally:
         connection.close()
+
 
 # 使用示例
 # if __name__ == "__main__":
